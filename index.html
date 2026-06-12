@@ -50,10 +50,6 @@
     padding:0 11% 6%;opacity:0;transform:scale(.96);transition:opacity .9s ease,transform .9s ease;}
   .heart-wrap.phase2 .date-layer{opacity:1;transform:scale(1);transition:none;}
   .heart-wrap.done .date-layer{opacity:1;transform:scale(1);}
-  .heart-wrap.done{--ink:#fff;--line:rgba(255,255,255,.55);background:#c0392b;
-    filter:drop-shadow(0 18px 40px rgba(180,0,0,.45));}
-  .heart-wrap.done .date-layer{background:transparent;}
-  .heart-wrap.done .cal-ico{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.6);}
   .date-inner{transform:translateY(2%);width:100%;display:flex;flex-direction:column;align-items:center;}
   .names{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(28px,8.4vw,38px);
     line-height:1.04;color:var(--ink);}
@@ -347,7 +343,7 @@ function finishPhase(){const c=activeCanvas(),ctx=c.getContext('2d');
     cPlata.style.display='none';heart.classList.add('phase2');phase=2;last=null;drawing=false;cFoto.style.pointerEvents='auto';
     hint.innerHTML='¡Hay una sorpresa más! Rasca la foto <span>💫</span>';}
   else{cFoto.style.display='none';drawing=false;heart.classList.add('done');
-    hint.innerHTML='<b>¡Reservad la fecha!</b> 🤍';rainHearts();}
+    hint.innerHTML='<b>¡Reservad la fecha!</b> ❤️';rainHearts();}
 }
 function down(e){drawing=true;last=null;scratch(pos(e));if(phase===1)fadeSparks();}
 function move(e){if(!drawing)return;scratch(pos(e));maybeAdvance();}
@@ -368,7 +364,7 @@ function addSparks(){for(let i=0;i<14;i++){const s=document.createElement('div')
   heart.insertBefore(s,sheen);}}
 function fadeSparks(){if(sparksFaded)return;sparksFaded=true;document.querySelectorAll('.spark').forEach(s=>s.remove());}
 
-function rainHearts(){const e=['🤍','🩶','✨','🤍'];for(let i=0;i<26;i++){
+function rainHearts(){const e=['❤️','🩶','✨','❤️'];for(let i=0;i<26;i++){
   const s=document.createElement('div');s.className='float';s.textContent=e[i%e.length];
   s.style.left=Math.random()*100+'vw';s.style.fontSize=(14+Math.random()*16)+'px';
   s.style.animationDuration=(3.4+Math.random()*2.6)+'s';s.style.animationDelay=(Math.random()*1.2)+'s';
