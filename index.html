@@ -416,7 +416,7 @@ function makeGCalURL(){
   const endD=new Date(Date.UTC(y,mo-1,d+1));
   const end=`${endD.getUTCFullYear()}${fmt(endD.getUTCMonth()+1)}${fmt(endD.getUTCDate())}`;
   const p=encodeURIComponent;
-  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${p('Boda de Virginia & Ramon')}&dates=${start}/${end}&details=${p(CONFIG.previo.replace(/\n/g," "))}&location=${p(CONFIG.lugar)}`;
+  return `https://calendar.google.com/calendar/r/eventedit?text=${p('Boda de Virginia & Ramon')}&dates=${start}/${end}&details=${p(CONFIG.previo.replace(/\n/g," "))}&location=${p(CONFIG.lugar)}`;
 }
 
 function addToCalendar(){
