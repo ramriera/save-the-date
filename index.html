@@ -396,22 +396,25 @@ function makeICS(){
     'END:VEVENT','END:VCALENDAR'
   ].join('\r\n');
 }
-function addToCalendar(){
+async function addToCalendar(){
   const ics=makeICS();
-  const ua=navigator.userAgent||'';
-  const isIOS=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-  if(isIOS){
-    window.location.href='data:text/calendar;charset=utf-8,'+encodeURIComponent(ics);
-    return;
+  const blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
+  const file=new File([blob],'boda-virginia-ramon.ics',{type:'text/calendar'});
+
+  /* 1. Web Share API con fichero → iOS 15+, Android Chrome, Samsung Internet */
+  if(navigator.canShare&&navigator.canShare({files:[file]})){
+    try{ await navigator.share({title:'Boda Virginia & Ramon',files:[file]}); return; }
+    catch(e){ if(e.name==='AbortError')return; /* usuario canceló */ }
   }
-  // Android (Samsung), escritorio…: descarga .ics e importa en su calendario
+
+  /* 2. Descarga directa — el SO abre el .ics con la app de calendario */
   try{
-    const blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');a.href=url;a.download='boda-virginia-ramon.ics';
     document.body.appendChild(a);a.click();a.remove();
     setTimeout(()=>URL.revokeObjectURL(url),5000);
   }catch(e){
+    /* 3. Último recurso: data URI (iOS Safari antiguo) */
     window.location.href='data:text/calendar;charset=utf-8,'+encodeURIComponent(ics);
   }
 }
