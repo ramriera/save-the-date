@@ -364,7 +364,7 @@ function addSparks(){for(let i=0;i<14;i++){const s=document.createElement('div')
   heart.insertBefore(s,sheen);}}
 function fadeSparks(){if(sparksFaded)return;sparksFaded=true;document.querySelectorAll('.spark').forEach(s=>s.remove());}
 
-function rainHearts(){const e=['❤️','🩶','✨','❤️'];for(let i=0;i<26;i++){
+function rainHearts(){const e=['🤍','🩶','✨','🤍'];for(let i=0;i<26;i++){
   const s=document.createElement('div');s.className='float';s.textContent=e[i%e.length];
   s.style.left=Math.random()*100+'vw';s.style.fontSize=(14+Math.random()*16)+'px';
   s.style.animationDuration=(3.4+Math.random()*2.6)+'s';s.style.animationDelay=(Math.random()*1.2)+'s';
