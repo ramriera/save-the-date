@@ -453,14 +453,18 @@ musicBtn.hidden=false; musicBtn.addEventListener('click',toggleMusic);
 
 /* La pantalla de entrada arranca la música y desaparece */
 const entryEl=document.getElementById('entry');
-function openEntry(e){
-  e.stopPropagation();
+let entryDone=false;
+function openEntry(){
+  if(entryDone)return; entryDone=true;
   startMusic();
   entryEl.style.opacity='0';
   entryEl.style.pointerEvents='none';
   setTimeout(()=>entryEl.remove(),950);
 }
-entryEl.addEventListener('pointerdown',openEntry,{once:true});
+/* click = gesto completo reconocido por Chrome/Firefox/Safari para autoplay */
+entryEl.addEventListener('click',openEntry,{once:true});
+/* touchstart para respuesta inmediata en móvil (iOS/Android) */
+entryEl.addEventListener('touchstart',openEntry,{once:true,passive:true});
 
 let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{
   if(phase===1)paintGlitter();if(!heart.classList.contains('done'))paintPhoto();},180);});
