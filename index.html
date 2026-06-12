@@ -420,24 +420,41 @@ function makeGCalURL(){
 }
 
 async function addToCalendar(){
-  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const ua=navigator.userAgent||'';
+  /* iOS/iPadOS: iPhone, iPad, o Mac con pantalla táctil (iPadOS 13+) */
+  const isIOS=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
+  /* Safari de escritorio también puede abrir .ics directamente */
+  const isSafari=isIOS||(/Safari/.test(ua)&&!/Chrome|CriOS|FxiOS/.test(ua));
 
-  /* iOS → intentar Web Share con .ics para Apple Calendar; resto → Google Calendar */
-  if(!isIOS){
+  if(!isSafari){
+    /* Android, Chrome, Firefox, Edge → Google Calendar */
     window.open(makeGCalURL(),'_blank','noopener');
     return;
   }
 
-  /* iOS: Web Share con fichero .ics */
+  /* Safari / iOS → .ics que Apple Calendar abre automáticamente */
   const ics=makeICS();
   const blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
   const file=new File([blob],'boda-virginia-ramon.ics',{type:'text/calendar'});
+
+  /* 1. Web Share API con fichero (iOS 15+, Safari 15+) */
   if(navigator.canShare&&navigator.canShare({files:[file]})){
     try{ await navigator.share({title:'Boda Virginia & Ramon',files:[file]}); return; }
     catch(e){ if(e.name==='AbortError')return; }
   }
-  /* Fallback iOS antiguo */
-  window.location.href='data:text/calendar;charset=utf-8,'+encodeURIComponent(ics);
+
+  /* 2. Blob URL → Safari lo abre con Apple Calendar (NO data: URI que está bloqueado) */
+  try{
+    const url=URL.createObjectURL(blob);
+    window.location.assign(url);
+    setTimeout(()=>URL.revokeObjectURL(url),10000);
+  }catch(e){
+    /* 3. Último recurso: descarga con <a> */
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download='boda-virginia-ramon.ics';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),5000);
+  }
 }
 document.getElementById('calBtn').addEventListener('click',addToCalendar);
 
