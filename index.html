@@ -190,9 +190,44 @@
   .ico-pause{display:none;width:14px;height:14px;}
   .music.playing .ico-play{display:none;}
   .music.playing .ico-pause{display:block;}
+
+  /* ── Pantalla de entrada ── */
+  #entry{
+    position:fixed;inset:0;z-index:200;
+    background:#f1ece1;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+    cursor:pointer;
+    transition:opacity .9s ease;
+  }
+  #entry .e-heart{
+    width:clamp(60px,18vw,90px);height:auto;
+    -webkit-mask:var(--heart) center/contain no-repeat;
+    mask:var(--heart) center/contain no-repeat;
+    background:#000;
+    opacity:.85;
+  }
+  #entry .e-names{
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(26px,7.5vw,42px);
+    font-weight:500;letter-spacing:.08em;
+    color:#000;line-height:1;
+  }
+  #entry .e-tap{
+    font-family:'Lora',serif;
+    font-size:11px;letter-spacing:.22em;
+    text-transform:uppercase;color:#000;opacity:.45;
+    margin-top:8px;
+    animation:tapPulse 2s ease-in-out infinite;
+  }
+  @keyframes tapPulse{0%,100%{opacity:.3}50%{opacity:.65}}
 </style>
 </head>
 <body>
+    <div id="entry" role="button" aria-label="Toca para abrir">
+    <div class="e-heart" style="width:clamp(60px,18vw,90px);aspect-ratio:32/29.6"></div>
+    <p class="e-names">Virginia &amp; Ramon</p>
+    <p class="e-tap">Toca para abrir</p>
+  </div>
   <div class="stage">
     <h2 class="eyebrow"><span class="sc">Save</span> <em>the</em> <span class="sc">Date</span></h2>
     <div class="heart-wrap" id="heart">
@@ -309,7 +344,7 @@ function finishPhase(){const c=activeCanvas(),ctx=c.getContext('2d');
   else{cFoto.style.display='none';drawing=false;heart.classList.add('done');
     hint.innerHTML='<b>¡Reservad la fecha!</b> 🤍';rainHearts();}
 }
-function down(e){drawing=true;last=null;scratch(pos(e));startMusic();if(phase===1)fadeSparks();}
+function down(e){drawing=true;last=null;scratch(pos(e));if(phase===1)fadeSparks();}
 function move(e){if(!drawing)return;scratch(pos(e));maybeAdvance();}
 function up(){if(!drawing)return;drawing=false;last=null;maybeAdvance();}
 [cPlata,cFoto].forEach(c=>{
@@ -397,14 +432,16 @@ function toggleMusic(){
 
 musicBtn.hidden=false; musicBtn.addEventListener('click',toggleMusic);
 
-/* Arranca en el primer gesto del usuario (toque, clic o tecla) */
-function firstGesture(){
+/* La pantalla de entrada arranca la música y desaparece */
+const entryEl=document.getElementById('entry');
+function openEntry(e){
+  e.stopPropagation();
   startMusic();
-  document.removeEventListener('pointerdown',firstGesture,true);
-  document.removeEventListener('touchstart',firstGesture,true);
+  entryEl.style.opacity='0';
+  entryEl.style.pointerEvents='none';
+  setTimeout(()=>entryEl.remove(),950);
 }
-document.addEventListener('pointerdown',firstGesture,{capture:true,passive:true,once:true});
-document.addEventListener('touchstart',firstGesture,{capture:true,passive:true,once:true});
+entryEl.addEventListener('pointerdown',openEntry,{once:true});
 
 let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{
   if(phase===1)paintGlitter();if(!heart.classList.contains('done'))paintPhoto();},180);});
