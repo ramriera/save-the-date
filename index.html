@@ -446,7 +446,8 @@ function addToCalendar(){
     return;
   }
 
-  openBlob();
+  /* Resto → Google Calendar en pestaña nueva */
+  window.open(makeGCalURL(),'_blank','noopener');
 }
 document.getElementById('calBtn').addEventListener('click',addToCalendar);
 
