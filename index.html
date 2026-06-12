@@ -422,9 +422,10 @@ function makeGCalURL(){
 function addToCalendar(){
   const ua=navigator.userAgent||'';
   const isIOS=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
-  const isSafari=isIOS||(/Safari/.test(ua)&&!/Chrome|CriOS|FxiOS/.test(ua));
 
-  /* Todos los dispositivos → Google Calendar en pestaña nueva */
+  /* iOS: navegar en misma pestaña para que Google Calendar detecte móvil correctamente */
+  if(isIOS){location.href=makeGCalURL();return;}
+  /* Resto → nueva pestaña */
   window.open(makeGCalURL(),'_blank','noopener'); return;
 
   /* Safari / iOS: todo síncrono en el call stack del gesto de usuario */
