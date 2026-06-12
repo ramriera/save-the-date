@@ -424,8 +424,8 @@ function addToCalendar(){
   const isIOS=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
   const isSafari=isIOS||(/Safari/.test(ua)&&!/Chrome|CriOS|FxiOS/.test(ua));
 
-  /* Android, Chrome, Firefox → Google Calendar */
-  if(!isSafari){ window.open(makeGCalURL(),'_blank','noopener'); return; }
+  /* Todos los dispositivos → Google Calendar en pestaña nueva */
+  window.open(makeGCalURL(),'_blank','noopener'); return;
 
   /* Safari / iOS: todo síncrono en el call stack del gesto de usuario */
   const ics=makeICS();
