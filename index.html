@@ -300,7 +300,7 @@ const sheen=document.getElementById('sheen');
 const hint=document.getElementById('hint');
 const DPR=Math.min(window.devicePixelRatio||1,2);
 
-let phase=1,drawing=false,last=null,photoImg=null,glitImg=null,sparksFaded=false;
+let phase=1,drawing=false,last=null,photoImg=null,glitImg=null,sparksFaded=false,scratchStarted=false;
 
 function sizeCanvas(c){
   const r=heart.getBoundingClientRect();
@@ -357,7 +357,7 @@ function finishPhase(){const c=activeCanvas(),ctx=c.getContext('2d');
   else{cFoto.style.display='none';drawing=false;heart.classList.add('done');
     hint.innerHTML='<b>¡Reservad la fecha!</b> ❤️';rainHearts();}
 }
-function down(e){drawing=true;last=null;scratch(pos(e));if(phase===1)fadeSparks();}
+function down(e){scratchStarted=true;drawing=true;last=null;scratch(pos(e));if(phase===1)fadeSparks();}
 function move(e){if(!drawing)return;scratch(pos(e));maybeAdvance();}
 function up(){if(!drawing)return;drawing=false;last=null;maybeAdvance();}
 [cPlata,cFoto].forEach(c=>{
@@ -416,7 +416,7 @@ function makeGCalURL(){
   const endD=new Date(Date.UTC(y,mo-1,d+1));
   const end=`${endD.getUTCFullYear()}${fmt(endD.getUTCMonth()+1)}${fmt(endD.getUTCDate())}`;
   const p=encodeURIComponent;
-  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${p('Boda de Virginia & Ramon')}&dates=${start}/${end}&details=${p(CONFIG.previo)}&location=${p(CONFIG.lugar)}`;
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${p('Boda de Virginia & Ramon')}&dates=${start}/${end}&details=${p(CONFIG.previo.replace(/\n/g," "))}&location=${p(CONFIG.lugar)}`;
 }
 
 function addToCalendar(){
@@ -468,9 +468,8 @@ function startMusic(){
 
 function toggleMusic(){
   if(!musicStarted){startMusic();return;}
-  if(playing){bgAudio.pause();playing=false;}
+  if(playing){bgAudio.pause();playing=false;setMusicIcon();}
   else{bgAudio.play().then(()=>{playing=true;setMusicIcon();}).catch(()=>{});}
-  setMusicIcon();
 }
 
 musicBtn.hidden=false; musicBtn.addEventListener('click',toggleMusic);
@@ -491,7 +490,10 @@ entryEl.addEventListener('click',openEntry,{once:true});
 entryEl.addEventListener('touchstart',openEntry,{once:true,passive:true});
 
 let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{
-  if(phase===1)paintGlitter();if(!heart.classList.contains('done'))paintPhoto();},180);});
+  if(!scratchStarted){
+    if(phase===1)paintGlitter();
+    if(!heart.classList.contains('done'))paintPhoto();
+  }},180);});
 </script>
 </body>
 </html>
