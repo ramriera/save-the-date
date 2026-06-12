@@ -221,6 +221,10 @@
     animation:tapPulse 2s ease-in-out infinite;
   }
   @keyframes tapPulse{0%,100%{opacity:.3}50%{opacity:.65}}
+
+  .cal-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:11px;}
+  .cal-ico{margin-top:0 !important;}
+  .ig-ico{text-decoration:none;display:inline-flex;align-items:center;justify-content:center;}
 </style>
 </head>
 <body>
@@ -237,11 +241,19 @@
           <p class="save" id="prev">nos casamos</p>
           <p class="date-big" id="dateBig">00 · 00 · 0000</p>
           <p class="place" id="place">Lugar</p>
-          <button class="cal-ico" id="calBtn" aria-label="Guardar la fecha" title="Guardar la fecha">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/>
-            </svg>
-          </button>
+          <div class="cal-row">
+            <a class="cal-ico ig-ico" href="https://www.instagram.com/mascarreras1846/" target="_blank" rel="noopener" aria-label="Instagram Mas Carreras" title="Instagram Mas Carreras">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4.5"/>
+                <circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+            <button class="cal-ico" id="calBtn" aria-label="Guardar la fecha" title="Guardar la fecha">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
       <canvas class="layer" id="cFoto"></canvas>
