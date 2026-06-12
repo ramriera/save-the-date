@@ -50,7 +50,11 @@
     padding:0 11% 6%;opacity:0;transform:scale(.96);transition:opacity .9s ease,transform .9s ease;}
   .heart-wrap.phase2 .date-layer{opacity:1;transform:scale(1);transition:none;}
   .heart-wrap.done .date-layer{opacity:1;transform:scale(1);}
-  .date-inner{transform:translateY(2%);}
+  .heart-wrap.done{--ink:#fff;--line:rgba(255,255,255,.55);background:#c0392b;
+    filter:drop-shadow(0 18px 40px rgba(180,0,0,.45));}
+  .heart-wrap.done .date-layer{background:transparent;}
+  .heart-wrap.done .cal-ico{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.6);}
+  .date-inner{transform:translateY(2%);width:100%;display:flex;flex-direction:column;align-items:center;}
   .names{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(28px,8.4vw,38px);
     line-height:1.04;color:var(--ink);}
   .amp{font-style:italic;font-weight:400;font-size:.7em;display:block;margin:.18em 0;opacity:.8;}
@@ -61,7 +65,7 @@
     font-size:9.5px;line-height:1.6;margin-top:10px;color:var(--ink);opacity:.7;}
   .save{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;
     font-size:clamp(12px,3.9vw,16px);line-height:1.28;letter-spacing:.015em;
-    margin-bottom:11px;color:var(--ink);opacity:.78;max-width:14em;}
+    margin-bottom:11px;color:var(--ink);opacity:.78;max-width:14em;text-align:center;width:100%;}
 
   canvas.layer{display:block;}
 
