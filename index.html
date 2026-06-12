@@ -484,10 +484,9 @@ function openEntry(){
   entryEl.style.pointerEvents='none';
   setTimeout(()=>entryEl.remove(),950);
 }
-/* click = gesto completo reconocido por Chrome/Firefox/Safari para autoplay */
+/* click cubre desktop; touchend cubre iOS/Android (touchstart no es gesto válido para autoplay en Safari) */
 entryEl.addEventListener('click',openEntry,{once:true});
-/* touchstart para respuesta inmediata en móvil (iOS/Android) */
-entryEl.addEventListener('touchstart',openEntry,{once:true,passive:true});
+entryEl.addEventListener('touchend',e=>{e.preventDefault();openEntry();},{once:true});
 
 let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{
   if(!scratchStarted){
