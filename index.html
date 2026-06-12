@@ -396,27 +396,36 @@ function makeICS(){
     'END:VEVENT','END:VCALENDAR'
   ].join('\r\n');
 }
+function makeGCalURL(){
+  const m=(CONFIG.fecha.match(/\d+/g)||['04','09','2027']);
+  const d=parseInt(m[0],10),mo=parseInt(m[1],10),y=parseInt(m[2],10);
+  const fmt=n=>String(n).padStart(2,'0');
+  const start=`${y}${fmt(mo)}${fmt(d)}`;
+  const endD=new Date(Date.UTC(y,mo-1,d+1));
+  const end=`${endD.getUTCFullYear()}${fmt(endD.getUTCMonth()+1)}${fmt(endD.getUTCDate())}`;
+  const p=encodeURIComponent;
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${p('Boda de Virginia & Ramon')}&dates=${start}/${end}&details=${p(CONFIG.previo)}&location=${p(CONFIG.lugar)}`;
+}
+
 async function addToCalendar(){
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+
+  /* iOS → intentar Web Share con .ics para Apple Calendar; resto → Google Calendar */
+  if(!isIOS){
+    window.open(makeGCalURL(),'_blank','noopener');
+    return;
+  }
+
+  /* iOS: Web Share con fichero .ics */
   const ics=makeICS();
   const blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
   const file=new File([blob],'boda-virginia-ramon.ics',{type:'text/calendar'});
-
-  /* 1. Web Share API con fichero → iOS 15+, Android Chrome, Samsung Internet */
   if(navigator.canShare&&navigator.canShare({files:[file]})){
     try{ await navigator.share({title:'Boda Virginia & Ramon',files:[file]}); return; }
-    catch(e){ if(e.name==='AbortError')return; /* usuario canceló */ }
+    catch(e){ if(e.name==='AbortError')return; }
   }
-
-  /* 2. Descarga directa — el SO abre el .ics con la app de calendario */
-  try{
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;a.download='boda-virginia-ramon.ics';
-    document.body.appendChild(a);a.click();a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),5000);
-  }catch(e){
-    /* 3. Último recurso: data URI (iOS Safari antiguo) */
-    window.location.href='data:text/calendar;charset=utf-8,'+encodeURIComponent(ics);
-  }
+  /* Fallback iOS antiguo */
+  window.location.href='data:text/calendar;charset=utf-8,'+encodeURIComponent(ics);
 }
 document.getElementById('calBtn').addEventListener('click',addToCalendar);
 
